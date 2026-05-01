@@ -1,0 +1,6 @@
+# Permanent batch: R21 ops
+# Use for agency operations, lead gen, fulfillment, sales, pricing, client delivery.
+# One source per line.
+# Blank lines and lines starting with # are ignored.
+# Add URLs or local file paths below.
+

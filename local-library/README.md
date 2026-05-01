@@ -17,6 +17,13 @@ This folder is the temporary local library for video research ingest before Obsi
 ## Repeatable batch workflow
 Create a plain-text file in `incoming/`, for example `incoming/example-batch.txt`, with one source per line.
 
+Recommended permanent starting files:
+- `incoming/ai-workflows.txt`
+- `incoming/r21-ops.txt`
+- `incoming/wow-goldmaking.txt`
+
+These are meant to be stable standing queues, not one-off scratch files. Add new sources to the right lane, run a batch when ready, then review the generated notes before deciding what is worth keeping.
+
 Then run:
 
 ```bash
@@ -37,3 +44,8 @@ Use:
 ## Suggested future Obsidian destination
 - `Ideas/Video Inspirations/`
 - or another folder you choose later.
+
+## Closeout operating rule
+- Treat the current pipeline as finished enough for real use.
+- Do not add new features until repeated real usage shows a clear pain point.
+- A good trigger for the next upgrade is friction that appears across at least 3 real batches.

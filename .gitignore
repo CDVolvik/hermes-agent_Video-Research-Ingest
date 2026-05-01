@@ -16,3 +16,6 @@ local-library/notes/*
 local-library/incoming/*
 !local-library/incoming/.gitkeep
 !local-library/incoming/example-batch.txt
+!local-library/incoming/ai-workflows.txt
+!local-library/incoming/r21-ops.txt
+!local-library/incoming/wow-goldmaking.txt

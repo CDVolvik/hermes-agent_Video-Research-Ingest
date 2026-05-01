@@ -1,0 +1,6 @@
+# Permanent batch: AI workflows
+# Use for Claude Code, MCPs, agent workflows, AI tooling, automation.
+# One source per line.
+# Blank lines and lines starting with # are ignored.
+# Add URLs or local file paths below.
+
