@@ -62,8 +62,8 @@ This keeps the tool:
 - still extensible for teams that want hosted APIs later
 
 ## Recommended project location
-Current working location:
-- `/home/carli/video-research-ingest`
+A good default working location is:
+- `~/video-research-ingest`
 
 Why this is a good default:
 - fast to develop and test inside WSL/Linux

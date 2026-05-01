@@ -18,7 +18,7 @@ https://www.youtube.com/watch?v=abc123
 
   https://example.com/video.mp4  
 # another comment
-/home/carli/Videos/local-demo.mp4
+/path/to/local-demo.mp4
 """,
         encoding="utf-8",
     )
@@ -28,7 +28,7 @@ https://www.youtube.com/watch?v=abc123
     assert sources == [
         "https://www.youtube.com/watch?v=abc123",
         "https://example.com/video.mp4",
-        "/home/carli/Videos/local-demo.mp4",
+        "/path/to/local-demo.mp4",
     ]
 
 

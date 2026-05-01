@@ -4,4 +4,4 @@
 
 https://www.youtube.com/watch?v=QZMljuD10sU
 https://www.youtube.com/watch?v=20BDYk-CU_o
-# /home/carli/Videos/example-local-file.mp4
+# /path/to/example-local-file.mp4
