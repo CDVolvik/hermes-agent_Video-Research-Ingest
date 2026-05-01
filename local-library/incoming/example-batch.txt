@@ -1,0 +1,7 @@
+# One source per line.
+# Blank lines and lines starting with # are ignored.
+# You can mix public URLs and local file paths.
+
+https://www.youtube.com/watch?v=QZMljuD10sU
+https://www.youtube.com/watch?v=20BDYk-CU_o
+# /home/carli/Videos/example-local-file.mp4

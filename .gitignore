@@ -11,3 +11,8 @@ output/
 *.mp3
 *.vtt
 *.log
+local-library/notes/*
+!local-library/notes/.gitkeep
+local-library/incoming/*
+!local-library/incoming/.gitkeep
+!local-library/incoming/example-batch.txt

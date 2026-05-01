@@ -127,7 +127,22 @@ python3 scripts/ingest.py --input /path/to/video.mp4
 python3 scripts/ingest.py --input "https://www.youtube.com/watch?v=..."
 ```
 
-### 3. Export note into Obsidian later
+### 3. Run a repeatable batch from a source list
+Create a source list like `local-library/incoming/example-batch.txt` with one URL or local file path per line.
+Comments beginning with `#` are ignored.
+
+```bash
+python3 scripts/batch_ingest.py \
+  --input-file local-library/incoming/example-batch.txt \
+  --batch-name 2026-05-01-example-batch
+```
+
+This creates a batch folder under `local-library/notes/<batch-name>/` with:
+- copied note files
+- copied metadata files
+- an `INDEX.md` overview for review
+
+### 4. Export note into Obsidian later
 ```bash
 export OBSIDIAN_VAULT_PATH="/path/to/vault"
 python3 scripts/ingest.py --input /path/to/video.mp4 --export-obsidian
@@ -152,12 +167,14 @@ Example local holding structure:
 - `local-library/incoming/`
 - `local-library/processed/`
 - `local-library/notes/`
+- `local-library/REVIEW-RUBRIC.md`
 
 This supports a practical workflow:
 1. capture video or link
-2. ingest locally
-3. review/edit note locally
-4. later bulk export into Obsidian when your vault is ready
+2. add sources to a batch text file
+3. run batch ingest locally
+4. review the generated batch `INDEX.md` with the rubric
+5. later bulk export only the strongest notes into Obsidian when your vault is ready
 
 ## Agent integration
 This repo is intentionally agent-friendly.
