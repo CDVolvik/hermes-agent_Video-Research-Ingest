@@ -173,3 +173,168 @@ The patron orders and auction house pricing are the repeatable profit engine.
     assert "World of Warcraft" in analysis["executive_summary"]
     assert any(keyword in analysis["keywords"] for keyword in ["wow", "gold", "profession", "auctionator"])
     assert "going" not in analysis["keywords"]
+
+
+def test_analyze_transcript_filters_promo_cta_from_insights(tmp_path):
+    vtt_path = tmp_path / "promo.vtt"
+    vtt_path.write_text(
+        """WEBVTT
+
+00:00:00.000 --> 00:00:04.000
+Join my free community below for the template and source code.
+
+00:00:10.000 --> 00:00:15.000
+I'll show you how to turn a video into frames, transcript notes, and a reusable Claude workflow.
+
+00:00:20.000 --> 00:00:25.000
+The useful part is extracting timestamps and frames so the agent can reason over the clip.
+""",
+        encoding="utf-8",
+    )
+
+    transcript_text = "\n".join(
+        [
+            "Join my free community below for the template and source code.",
+            "I'll show you how to turn a video into frames, transcript notes, and a reusable Claude workflow.",
+            "The useful part is extracting timestamps and frames so the agent can reason over the clip.",
+        ]
+    )
+
+    analysis = analyze_transcript(
+        title="My Claude Code Can INSTANTLY Watch Any Video (Here's How)",
+        transcript_text=transcript_text,
+        transcript_vtt_path=vtt_path,
+        metadata={
+            "download_metadata": {
+                "tags": ["Claude Code", "video", "frames"],
+                "categories": ["Science & Technology"],
+            }
+        },
+    )
+
+    assert "free community" not in analysis["key_insights"].lower()
+    assert "source code" not in analysis["timestamped_notes"].lower()
+
+
+def test_analyze_transcript_prefers_video_agent_domain_for_watch_any_video(tmp_path):
+    vtt_path = tmp_path / "video-agent.vtt"
+    vtt_path.write_text(
+        """WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+I'll show you how my Claude Code setup watches any YouTube video, extracts frames, and reads the transcript.
+
+00:00:20.000 --> 00:00:25.000
+The workflow sends frame context and transcript chunks back to the agent for analysis.
+
+00:00:45.000 --> 00:00:50.000
+This is better for video research than treating it like a generic coding repo demo.
+""",
+        encoding="utf-8",
+    )
+
+    transcript_text = "\n".join(
+        [
+            "I'll show you how my Claude Code setup watches any YouTube video, extracts frames, and reads the transcript.",
+            "The workflow sends frame context and transcript chunks back to the agent for analysis.",
+            "This is better for video research than treating it like a generic coding repo demo.",
+        ]
+    )
+
+    analysis = analyze_transcript(
+        title="My Claude Code Can INSTANTLY Watch Any Video (Here's How)",
+        transcript_text=transcript_text,
+        transcript_vtt_path=vtt_path,
+        metadata={
+            "download_metadata": {
+                "tags": ["Claude Code", "video analysis", "frames", "transcript"],
+                "categories": ["Science & Technology"],
+            }
+        },
+    )
+
+    assert analysis["domain"] == "agent-video-analysis"
+    assert "video analysis" in analysis["executive_summary"].lower()
+
+
+def test_analyze_transcript_promotes_specific_keywords_over_generic_fillers(tmp_path):
+    vtt_path = tmp_path / "keywords.vtt"
+    vtt_path.write_text(
+        """WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+This Claude Code workflow uses Higgsfield MCP to turn frames and captions into video analysis.
+
+00:00:10.000 --> 00:00:15.000
+It actually works because the MCP passes structured frame data and transcript context.
+
+00:00:20.000 --> 00:00:25.000
+The useful output is frame analysis, transcript notes, and reusable prompts.
+""",
+        encoding="utf-8",
+    )
+
+    transcript_text = "\n".join(
+        [
+            "This Claude Code workflow uses Higgsfield MCP to turn frames and captions into video analysis.",
+            "It actually works because the MCP passes structured frame data and transcript context.",
+            "The useful output is frame analysis, transcript notes, and reusable prompts.",
+        ]
+    )
+
+    analysis = analyze_transcript(
+        title="Claude Code + Higgsfield MCP = Content MACHINE",
+        transcript_text=transcript_text,
+        transcript_vtt_path=vtt_path,
+        metadata={
+            "download_metadata": {
+                "tags": ["Claude Code", "Higgsfield MCP", "video analysis", "frames"],
+                "categories": ["Science & Technology"],
+            }
+        },
+    )
+
+    assert "higgsfield-mcp" in analysis["keywords"] or "higgsfield" in analysis["keywords"]
+    assert "mcp" in analysis["keywords"]
+    assert "actually" not in analysis["keywords"]
+
+
+def test_analyze_transcript_uses_distinct_practical_sentence_when_available(tmp_path):
+    vtt_path = tmp_path / "summary.vtt"
+    vtt_path.write_text(
+        """WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+I'll show you how to use Claude Code to watch any video and pull out transcript context.
+
+00:00:12.000 --> 00:00:18.000
+The practical win is that you can isolate frames, timestamps, and prompt-ready notes before handing the task back to the agent.
+
+00:00:30.000 --> 00:00:35.000
+That makes the workflow more useful than a generic transcript-only summary.
+""",
+        encoding="utf-8",
+    )
+
+    transcript_text = "\n".join(
+        [
+            "I'll show you how to use Claude Code to watch any video and pull out transcript context.",
+            "The practical win is that you can isolate frames, timestamps, and prompt-ready notes before handing the task back to the agent.",
+            "That makes the workflow more useful than a generic transcript-only summary.",
+        ]
+    )
+
+    analysis = analyze_transcript(
+        title="My Claude Code Can INSTANTLY Watch Any Video (Here's How)",
+        transcript_text=transcript_text,
+        transcript_vtt_path=vtt_path,
+        metadata={
+            "download_metadata": {
+                "tags": ["Claude Code", "video analysis", "frames", "transcript"],
+                "categories": ["Science & Technology"],
+            }
+        },
+    )
+
+    assert "Core premise: I'll show you how to use Claude Code to watch any video" in analysis["executive_summary"]
+    assert "Practical value: The practical win is that you can isolate frames, timestamps, and prompt-ready notes" in analysis["executive_summary"]

@@ -122,6 +122,8 @@ LOW_SIGNAL_PREFIXES = (
     "alright",
     "and there we go",
     "great there we go",
+    "join my free community",
+    "join the free community",
     "what is up",
     "welcome back",
     "if that is interesting",
@@ -157,6 +159,19 @@ DOMAIN_RULES = [
         ["canva", "poster", "design", "gpt image", "magic layers", "aspect ratio", "high-res"],
     ),
     (
+        "agent-video-analysis",
+        [
+            "watch any video",
+            "video analysis",
+            "video research",
+            "youtube video",
+            "extracts frames",
+            "reads the transcript",
+            "transcript chunks",
+            "frame context",
+        ],
+    ),
+    (
         "software-build",
         ["calendly", "source code", "environment values", "spec", "build our own", "app", "repo"],
     ),
@@ -174,6 +189,7 @@ SUMMARY_DOMAIN_LANGUAGE = {
     "gaming-goldmaking": "a practical gold-making method inside World of Warcraft rather than general commentary",
     "agent-memory": "an agent memory architecture and setup explanation rather than entertainment-only commentary",
     "ai-design": "an AI-assisted creative workflow rather than pure theory",
+    "agent-video-analysis": "an agent-driven video analysis workflow rather than a generic coding demo",
     "software-build": "a build-and-ship walkthrough for a small software tool rather than abstract theory",
     "general": "a practical repeatable workflow rather than pure theory",
 }
@@ -194,6 +210,10 @@ FOLLOWUP_LIBRARY = {
     "ai-design": [
         "- Save the strongest prompt and review pattern as a reusable template before scaling it to client work.",
         "- Add a QA step before bulk generation goes to production use.",
+    ],
+    "agent-video-analysis": [
+        "- Validate the workflow on a second video format so frame extraction and transcript handling are not overfit to one example.",
+        "- Capture the exact agent input structure for frames, transcript chunks, and review notes before scaling the workflow.",
     ],
 }
 
@@ -450,6 +470,7 @@ def extract_keywords(*, title: str, transcript_text: str, metadata: dict[str, An
         "gaming-goldmaking": ["wow", "gold", "token", "profession", "alt-army", "auctionator", "knowledge"],
         "agent-memory": ["memory", "dreaming", "wiki", "active-memory", "obsidian", "recall"],
         "ai-design": ["claude", "canva", "design", "poster", "gpt-image", "sub-agents"],
+        "agent-video-analysis": ["claude", "video-analysis", "frames", "transcript", "mcp", "higgsfield-mcp"],
         "software-build": ["calendly", "claude-code", "source-code", "spec", "app", "setup"],
     }.get(domain, [])
 
@@ -477,11 +498,11 @@ def normalize_keyword(token: str) -> str:
 def is_valid_keyword(token: str) -> bool:
     if not token or token in STOPWORDS:
         return False
-    if len(token) < 4 and token not in {"wow"}:
+    if len(token) < 4 and token not in {"wow", "mcp"}:
         return False
     if token.isdigit():
         return False
-    if token in {"going", "right", "here", "some", "make", "thing", "things", "video", "videos", "today", "really"}:
+    if token in {"actually", "going", "right", "here", "some", "make", "thing", "things", "video", "videos", "today", "really"}:
         return False
     return True
 
@@ -580,9 +601,13 @@ def choose_practical_sentence(sentences: list[str], fallback: str) -> str:
         "worth",
         "profit",
         "check",
+        "practical win",
     ]
+    fallback_normalized = normalize_text(fallback)
     for sentence in sentences:
         lowered = sentence.lower()
+        if normalize_text(sentence) == fallback_normalized and len(sentences) > 1:
+            continue
         if any(marker in lowered for marker in practical_markers) and not is_low_signal_text(sentence):
             return sentence
     return fallback
